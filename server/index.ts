@@ -28,6 +28,10 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 集友众包 API 服务器运行在 http://localhost:${PORT}`);
-});
+export default app;
+
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 集友众包 API 服务器运行在 http://localhost:${PORT}`);
+  });
+}
