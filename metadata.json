@@ -1,0 +1,7 @@
+{
+  "name": "JiYouZhongBao",
+  "description": "一个连接自由职业者与任务发布者的灵活用工众包平台。",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
