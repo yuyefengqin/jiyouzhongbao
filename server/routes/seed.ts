@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { supabase } from '../supabase';
+import { supabase } from '../supabase.js';
 
 const router = Router();
 
@@ -34,7 +34,7 @@ router.post('/', async (_req: Request, res: Response) => {
     if (authError) {
       // 如果用户已存在，尝试获取
       const { data: existingUsers } = await supabase.auth.admin.listUsers();
-      const existing = existingUsers?.users?.find(u => u.email === user.email);
+      const existing = (existingUsers?.users || []).find((u: any) => u.email === user.email);
       if (existing) {
         userIds.push(existing.id);
         continue;

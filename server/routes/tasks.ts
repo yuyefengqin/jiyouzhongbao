@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { supabase, authMiddleware } from '../supabase';
+import { supabase, authMiddleware } from '../supabase.js';
 
 const router = Router();
 
@@ -177,13 +177,20 @@ router.post('/:id/submit', authMiddleware, async (req: Request, res: Response) =
   }
 
   // 更新用户任务完成数
-  await supabase.rpc('increment_task_count', { user_id_input: user.id }).catch(() => {
-    // 如果 RPC 不存在，直接更新
-    supabase
-      .from('profiles')
-      .update({ task_count: supabase.rpc ? undefined : 0 })
-      .eq('id', user.id);
-  });
+  try {
+    const { error: rpcError } = await supabase.rpc('increment_task_count', { user_id_input: user.id });
+    if (rpcError) {
+      console.warn('RPC increment_task_count failed, falling back to profile update:', rpcError);
+      // 获取当前值并递增（简单降级逻辑）
+      const { data: profile } = await supabase.from('profiles').select('task_count').eq('id', user.id).single();
+      await supabase
+        .from('profiles')
+        .update({ task_count: (profile?.task_count || 0) + 1 })
+        .eq('id', user.id);
+    }
+  } catch (e) {
+    console.error('Increment task count failed:', e);
+  }
 
   res.json({ message: '提交成功' });
 });

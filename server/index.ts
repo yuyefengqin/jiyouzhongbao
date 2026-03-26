@@ -4,11 +4,11 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.local' });
 
-import authRoutes from './routes/auth';
-import taskRoutes from './routes/tasks';
-import walletRoutes from './routes/wallet';
-import messageRoutes from './routes/messages';
-import seedRoutes from './routes/seed';
+import authRoutes from './routes/auth.js';
+import taskRoutes from './routes/tasks.js';
+import walletRoutes from './routes/wallet.js';
+import messageRoutes from './routes/messages.js';
+import seedRoutes from './routes/seed.js';
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 3001;
